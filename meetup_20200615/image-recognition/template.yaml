@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Um sistema serverless de reconhecimento de imagem 
+
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  ImageCheckRecognitionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: code/
+      Handler: app.imagecheck
+      Runtime: python3.7
+      Role: arn:aws:iam::200984112386:role/service-role/myfn-role-hoitwq14
+      Tracing: Active
+      Events:
+        ImageCheck:
+          Type: Api
+          Properties:
+            Path: /analyze
+            Method: any
+  
+
+
+Outputs:
+  ImageCheckRecognitionFunction:
+    Description: "ImageCheckRecognitionFunction ARN"
+    Value: !GetAtt ImageCheckRecognitionFunction.Arn
+  ImageCheckApi:
+      Description: "API Gateway for ImageCheck"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/analyze/"
